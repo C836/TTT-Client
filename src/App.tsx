@@ -2,11 +2,13 @@ import { Global } from "./global";
 import { Container } from "./components/Grid/Container";
 import { Position } from "./components/Grid/Position";
 
+import { newMove } from "./actions/index";
+
 function App() {
   const Positions = [...Array(9).keys()];
 
   const handleSubmit = (e:any) => {
-    console.log(e.target.value);
+    newMove(e.target.value);
   };
 
   return (
