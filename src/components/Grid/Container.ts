@@ -1,6 +1,6 @@
 import styled from "styled-components"
 
-export const Grid = styled.section`
+export const Container = styled.section`
 width: 100%;
 max-width: 300px;
 background-color: white;
