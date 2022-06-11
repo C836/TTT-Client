@@ -1,5 +1,8 @@
-import { sendMessage } from "./actions/index"
 import { useRef } from "react"
+
+import { Global } from "./global"
+
+import { sendMessage } from "./actions/index"
 
 function App() {
   const inputRef = useRef<HTMLInputElement>(null)
@@ -10,6 +13,8 @@ function App() {
 
   return (
     <div className="App">
+      <Global />
+
       <input ref={inputRef} />
       <button onClick={ handleSubmit }>Enviar</button>
     </div>
