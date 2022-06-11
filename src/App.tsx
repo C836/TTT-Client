@@ -1,17 +1,12 @@
-import { useRef } from "react";
-
 import { Global } from "./global";
 import { Container } from "./components/Grid/Container";
 import { Position } from "./components/Grid/Position";
 
-import { sendMessage } from "./actions/index";
-
 function App() {
   const Positions = [...Array(9).keys()];
-  const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleSubmit = () => {
-    sendMessage(inputRef.current?.value);
+  const handleSubmit = (e:any) => {
+    console.log(e.target.value);
   };
 
   return (
@@ -19,11 +14,13 @@ function App() {
       <Global />
       <Container>
         {Positions.map((item) => (
-          <Position>{item}</Position>
+          <Position
+          key={item}
+          value={item}
+          onClick={handleSubmit}
+          >{item}</Position>
         ))}
       </Container>
-      <input ref={inputRef} />
-      <button onClick={handleSubmit}>Enviar</button>
     </div>
   );
 }
