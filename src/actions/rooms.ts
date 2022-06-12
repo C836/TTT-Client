@@ -1,15 +1,15 @@
-interface Room {
+interface Data {
   socket: any,
-  username: string | undefined,
-  room: string | undefined
+  username: string,
+  room: string
 }
 
-export class Rooms implements Room{
+export class Rooms implements Data{
   socket: any
-  username: string | undefined
-  room: string | undefined
+  username: string
+  room: string
 
-  constructor(data:Room){
+  constructor(data:Data){
     this.socket = data.socket,
     this.username = data.username,
     this.room = data.room    
