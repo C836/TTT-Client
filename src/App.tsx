@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 import io from "socket.io-client";
 
 import { Global } from "./global";
-import { Container } from "./components/Grid/Container";
+
+import { Grid } from "./components/Grid/Grid";
 import { Position } from "./components/Grid/Position";
+import { Menu } from "./components/Join_Menu/Menu";
 
 import { Rooms } from "./actions/rooms";
 import { Games } from "./actions/game";
@@ -11,22 +13,26 @@ import { Games } from "./actions/game";
 const socket = io("http://localhost:3010");
 
 function App() {
-  const [username, setUsername] = useState<string>("");
-  const [room, setRoom] = useState<string>("");
+  const [user, setUser] = useState({username: ""});
+    const {username} = user
+
+  const [server, setServer] = useState({room: "", key: ""});
+    const {room, key} = server
 
   const Room = new Rooms({ socket, username, room });
 
   const Positions = [...Array(9).keys()];
 
   function sendPosition(position: number) {
-    const Game = new Games({ socket, username, room, position});
-    Game.new_move()
+    const Game = new Games({ socket, username, room, position });
+    Game.new_move();
   }
 
   useEffect(() => {
     socket.on("room_status", (response) => {
-      console.log(response);
-      setRoom(response.key);
+      if(response.status === "created"){
+        setServer({room:response.key, key:response.key});
+      }
     });
 
     socket.on("receive_position", (data) => {
@@ -38,22 +44,26 @@ function App() {
     <div className="App">
       <Global />
 
-      <input
-        type={"text"}
-        placeholder={"Apelido"}
-        onChange={(event) => setUsername(event.target.value)}
-      />
+      <Menu>
+        <input
+          type={"text"}
+          placeholder={"Apelido"}
+          onChange={(event) => setUser({...user, username: event.target.value})}
+        />
 
-      <input
-        type={"text"}
-        placeholder={"Sala"}
-        onChange={(event) => setRoom(event.target.value)}
-      />
+        <input
+          type={"text"}
+          placeholder={"Sala"}
+          onChange={(event) => setServer({...server, room: event.target.value})}
+        />
 
-      <button onClick={() => Room.create_room()}>Create</button>
-      <button onClick={() => Room.join_room()}>Join</button>
+        <button onClick={() => Room.create_room()}>Create</button>
+        <button onClick={() => Room.join_room()}>Join</button>
 
-      <Container>
+        <p>{key}</p>
+      </Menu>
+
+      <Grid>
         {Positions.map((item) => (
           <Position
             key={item}
@@ -65,7 +75,7 @@ function App() {
             {item}
           </Position>
         ))}
-      </Container>
+      </Grid>
     </div>
   );
 }
