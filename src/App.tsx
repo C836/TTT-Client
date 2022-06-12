@@ -21,17 +21,28 @@ function App() {
     }
   }
 
-  async function sendPosition(position: string) {
+  function createRoom() {
+    if (username) {
+      socket.emit("create_room", room);
+    }
+  }
+
+  function sendPosition(position: string) {
     const data = {
       room: room,
       user: username,
       position: position,
     };
 
-    await socket.emit("send_position", data);
+    socket.emit("send_position", data);
   }
 
   useEffect(() => {
+    socket.on("room_status", (response) => {
+      console.log(response)
+      setRoom(response.key);
+    })
+
     socket.on("receive_position", (data) => {
       console.log(data)
     });
@@ -53,6 +64,7 @@ function App() {
         onChange={(event) => setRoom(event.target.value)}
       />
 
+      <button onClick={createRoom}>Create</button>
       <button onClick={joinRoom}>Join</button>
 
       <Container>
