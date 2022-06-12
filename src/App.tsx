@@ -5,46 +5,32 @@ import { Global } from "./global";
 import { Container } from "./components/Grid/Container";
 import { Position } from "./components/Grid/Position";
 
-import { newMove } from "./actions/index";
+import { Rooms } from "./actions/rooms";
+import { Games } from "./actions/game";
 
 const socket = io("http://localhost:3010");
 
 function App() {
-  const [username, setUsername] = useState<string>();
-  const [room, setRoom] = useState<string>();
+  const [username, setUsername] = useState<string>("");
+  const [room, setRoom] = useState<string>("");
+
+  const Room = new Rooms({ socket, username, room });
 
   const Positions = [...Array(9).keys()];
 
-  function joinRoom() {
-    if (username && room) {
-      socket.emit("join_room", room);
-    }
-  }
-
-  function createRoom() {
-    if (username) {
-      socket.emit("create_room", room);
-    }
-  }
-
-  function sendPosition(position: string) {
-    const data = {
-      room: room,
-      user: username,
-      position: position,
-    };
-
-    socket.emit("send_position", data);
+  function sendPosition(position: number) {
+    const Game = new Games({ socket, username, room, position});
+    Game.new_move()
   }
 
   useEffect(() => {
     socket.on("room_status", (response) => {
-      console.log(response)
+      console.log(response);
       setRoom(response.key);
-    })
+    });
 
     socket.on("receive_position", (data) => {
-      console.log(data)
+      console.log(data);
     });
   }, [socket]);
 
@@ -64,8 +50,8 @@ function App() {
         onChange={(event) => setRoom(event.target.value)}
       />
 
-      <button onClick={createRoom}>Create</button>
-      <button onClick={joinRoom}>Join</button>
+      <button onClick={() => Room.create_room()}>Create</button>
+      <button onClick={() => Room.join_room()}>Join</button>
 
       <Container>
         {Positions.map((item) => (
@@ -73,7 +59,7 @@ function App() {
             key={item}
             value={item}
             onClick={(event) => {
-              sendPosition((event.target as HTMLButtonElement).value);
+              sendPosition(Number((event.target as HTMLButtonElement).value));
             }}
           >
             {item}
