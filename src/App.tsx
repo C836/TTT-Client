@@ -25,6 +25,7 @@ function App() {
 
   function sendPosition(position: number) {
     if(turn === true){
+      setGame({ ...game, turn: false })
       new Games({ socket, username, room, turn, position }).new_move();
     }
   }
@@ -72,10 +73,13 @@ function App() {
     });
 
     socket.on("start_player", (data) => {
-      console.log(data.selected)
+      if(data.selected === socket.id){
+        setGame({ ...game, turn: true })
+      }
     })
 
     socket.on("receive_position", (data) => {
+      setGame({ ...game, turn: true })
       console.log(data);
     });
   }, [socket]);
