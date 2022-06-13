@@ -58,7 +58,20 @@ function App() {
           };
         });
       }
+
+      if (response.status === "starting") {
+        setServer((state) => {
+          return {
+            ...state,
+            status: "ready",
+          };
+        });
+      }
     });
+
+    socket.on("start_player", (data) => {
+      console.log(data.selected)
+    })
 
     socket.on("receive_position", (data) => {
       console.log(data);
@@ -90,7 +103,9 @@ function App() {
         <button onClick={() => Room.join_room()}>Join</button>
 
         <p>{key}</p>
-        <p>{status}</p>
+        {status !== "ready" 
+        ? <p>{status}</p> 
+        : <button onClick={() => new Games({ socket, username, room }).choose_player()}>Start Game</button>}
       </Menu>
 
       <Grid>
