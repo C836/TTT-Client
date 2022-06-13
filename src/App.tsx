@@ -13,8 +13,8 @@ import { Games } from "./actions/game";
 const socket = io("http://localhost:3010");
 
 function App() {
-  const [user, setUser] = useState({ username: "" });
-  const { username } = user;
+  const [game, setGame] = useState({ username: "", turn: false });
+  const { username, turn } = game;
 
   const [server, setServer] = useState({ room: "", key: "", status: "" });
   const { room, key, status } = server;
@@ -24,7 +24,9 @@ function App() {
   const Positions = [...Array(9).keys()];
 
   function sendPosition(position: number) {
-    new Games({ socket, username, room, position }).new_move();
+    if(turn === true){
+      new Games({ socket, username, room, turn, position }).new_move();
+    }
   }
 
   useEffect(() => {
@@ -87,7 +89,7 @@ function App() {
           type={"text"}
           placeholder={"Apelido"}
           onChange={(event) =>
-            setUser({ ...user, username: event.target.value })
+            setGame({ ...game, username: event.target.value })
           }
         />
 
@@ -108,7 +110,9 @@ function App() {
         : <button onClick={() => new Games({ socket, username, room }).choose_player()}>Start Game</button>}
       </Menu>
 
-      <Grid>
+      <Grid
+      disabled = {turn ? false : true}
+      >
         {Positions.map((item) => (
           <Position
             key={item}
