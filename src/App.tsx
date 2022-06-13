@@ -13,11 +13,11 @@ import { Games } from "./actions/game";
 const socket = io("http://localhost:3010");
 
 function App() {
-  const [user, setUser] = useState({username: ""});
-    const {username} = user
+  const [user, setUser] = useState({ username: "" });
+  const { username } = user;
 
-  const [server, setServer] = useState({room: "", key: ""});
-    const {room, key} = server
+  const [server, setServer] = useState({ room: "", key: "", status: "" });
+  const { room, key, status } = server;
 
   const Room = new Rooms({ socket, username, room });
 
@@ -30,8 +30,28 @@ function App() {
 
   useEffect(() => {
     socket.on("room_status", (response) => {
-      if(response.status === "created"){
-        setServer({room:response.key, key:response.key});
+      if (response.status === "created") {
+        setServer((server) => ({
+          ...server,
+          room: response.key,
+          key: response.key,
+          status: "Waiting for player...",
+        }));
+      }
+
+      if (response.status === "joined") {
+        setServer((server) => ({
+          ...server,
+          room: response.key,
+          status: "Conected",
+        }));
+      }
+
+      if (response.status === "joined_peer") {
+        setServer((server) => ({
+          ...server,
+          status: "Peer conected",
+        }));
       }
     });
 
@@ -48,19 +68,24 @@ function App() {
         <input
           type={"text"}
           placeholder={"Apelido"}
-          onChange={(event) => setUser({...user, username: event.target.value})}
+          onChange={(event) =>
+            setUser({ ...user, username: event.target.value })
+          }
         />
 
         <input
           type={"text"}
           placeholder={"Sala"}
-          onChange={(event) => setServer({...server, room: event.target.value})}
+          onChange={(event) =>
+            setServer({ ...server, room: event.target.value })
+          }
         />
 
         <button onClick={() => Room.create_room()}>Create</button>
         <button onClick={() => Room.join_room()}>Join</button>
 
         <p>{key}</p>
+        <p>{status}</p>
       </Menu>
 
       <Grid>
