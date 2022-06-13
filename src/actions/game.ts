@@ -2,7 +2,7 @@ interface Data {
   socket: any;
   username: string;
   room: string;
-  position: number
+  position: number;
 }
 
 export class Games implements Data {
@@ -15,10 +15,14 @@ export class Games implements Data {
     (this.socket = data.socket),
     (this.username = data.username),
     (this.room = data.room);
-    (this.position = data.position)
+    this.position = data.position;
   }
 
   new_move() {
-    this.socket.emit("send_position", { room: this.room, user: null, position: this.position });
+    this.socket.emit("send_position", {
+      room: this.room,
+      user: this.username,
+      position: this.position,
+    });
   }
 }
