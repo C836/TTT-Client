@@ -24,34 +24,39 @@ function App() {
   const Positions = [...Array(9).keys()];
 
   function sendPosition(position: number) {
-    const Game = new Games({ socket, username, room, position });
-    Game.new_move();
+    new Games({ socket, username, room, position }).new_move();
   }
 
   useEffect(() => {
     socket.on("room_status", (response) => {
       if (response.status === "created") {
-        setServer((server) => ({
-          ...server,
-          room: response.key,
-          key: response.key,
-          status: "Waiting for player...",
-        }));
+        setServer((state) => {
+          return {
+            ...state,
+            room: response.key,
+            key: response.key,
+            status: "Waiting for player...",
+          };
+        });
       }
 
       if (response.status === "joined") {
-        setServer((server) => ({
-          ...server,
-          room: response.key,
-          status: "Conected",
-        }));
+        setServer((state) => {
+          return {
+            ...state,
+            room: response.key,
+            status: "Conected",
+          };
+        });
       }
 
       if (response.status === "joined_peer") {
-        setServer((server) => ({
-          ...server,
-          status: "Peer conected",
-        }));
+        setServer((state) => {
+          return {
+            ...state,
+            status: "Peer conected",
+          };
+        });
       }
     });
 
