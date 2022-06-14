@@ -102,6 +102,10 @@ function App() {
 
       updateBoard(data)
     });
+
+    socket.on("win", (data) => {
+      console.log(data)
+    })
   }, [socket]);
 
   return (
