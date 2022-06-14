@@ -13,8 +13,8 @@ import { Games } from "./actions/game";
 const socket = io("http://localhost:3010");
 
 function App() {
-  const [game, setGame] = useState({ username: "", turn: false });
-  const { username, turn } = game;
+  const [game, setGame] = useState({ username: "", turn: false, signal: 0 });
+  const { username, turn, signal } = game;
 
   const [server, setServer] = useState({ room: "", key: "", status: "" });
   const { room, key, status } = server;
@@ -25,9 +25,15 @@ function App() {
 
   function sendPosition(position: number) {
     if(turn === true){
-      setGame({ ...game, turn: false })
-      new Games({ socket, username, room, turn, position }).new_move();
+      new Games({ socket, username, room, turn, position, signal }).new_move();
     }
+  }
+
+  function updateBoard(data:any){
+    let state = board;
+    state[data.position] = data.signal === 0 ? "O" : "X"
+
+    setBoard(state)
   }
 
   useEffect(() => {
@@ -42,6 +48,14 @@ function App() {
           };
         });
       }
+
+      if (response.status === "joined") {
+        setGame((state) => {
+          return {
+            ...state,
+            signal: 1
+          }
+        })
 
         setServer((state) => {
           return {
@@ -77,8 +91,16 @@ function App() {
       }
     })
 
+    socket.on("register_position", (data) => {
+      setGame((state) => {return { ...state, turn: false }})
+
+      updateBoard(data)
+    })
+
     socket.on("receive_position", (data) => {
       setGame((state) => {return { ...state, turn: true }})
+
+      updateBoard(data)
     });
   }, [socket]);
 
@@ -111,6 +133,8 @@ function App() {
         ? <p>{status}</p> 
         : <button onClick={() => new Games({ socket, username, room }).choose_player()}>Start Game</button>}
       </Menu>
+
+      {signal}
 
       <Grid
       disabled = {turn ? false : true}

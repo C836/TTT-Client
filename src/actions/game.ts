@@ -4,6 +4,7 @@ interface Data {
   room: string;
   turn?: boolean | undefined;
   position?: number | undefined;
+  signal?: number | undefined
 }
 
 export class Games implements Data {
@@ -12,6 +13,7 @@ export class Games implements Data {
   room: string;
   turn: boolean | undefined;
   position: number | undefined;
+  signal: number | undefined
 
   constructor(data: Data) {
     this.socket = data.socket,
@@ -19,6 +21,7 @@ export class Games implements Data {
     this.room = data.room;
     this.turn = data.turn;
     this.position = data.position;
+    this.signal = data.signal;
   }
 
   choose_player() {
@@ -28,11 +31,11 @@ export class Games implements Data {
   }
 
   new_move() {
-    this.turn
     this.socket.emit("send_position", {
       room: this.room,
       user: this.username,
       position: this.position,
+      signal: this.signal
     });
   }
 }
