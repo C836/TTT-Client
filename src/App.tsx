@@ -19,9 +19,9 @@ function App() {
   const [server, setServer] = useState({ room: "", key: "", status: "" });
   const { room, key, status } = server;
 
-  const Room = new Rooms({ socket, username, room });
+  const [board, setBoard] = useState(Array(9).fill(""))
 
-  const Positions = [...Array(9).keys()];
+  const Room = new Rooms({ socket, username, room });
 
   function sendPosition(position: number) {
     if(turn === true){
@@ -43,7 +43,6 @@ function App() {
         });
       }
 
-      if (response.status === "joined") {
         setServer((state) => {
           return {
             ...state,
@@ -74,13 +73,12 @@ function App() {
 
     socket.on("start_player", (data) => {
       if(data.selected === socket.id){
-        setGame({ ...game, turn: true })
+        setGame((state) => {return{...state, turn: true }})
       }
     })
 
     socket.on("receive_position", (data) => {
-      setGame({ ...game, turn: true })
-      console.log(data);
+      setGame((state) => {return { ...state, turn: true }})
     });
   }, [socket]);
 
@@ -117,15 +115,15 @@ function App() {
       <Grid
       disabled = {turn ? false : true}
       >
-        {Positions.map((item) => (
+        {board.map((item, index) => (
           <Position
-            key={item}
-            value={item}
+            key={index}
+            value={index}
             onClick={(event) => {
               sendPosition(Number((event.target as HTMLButtonElement).value));
             }}
           >
-            {item}
+          {item}
           </Position>
         ))}
       </Grid>
