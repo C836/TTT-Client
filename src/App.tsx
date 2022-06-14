@@ -13,7 +13,7 @@ import { Games } from "./actions/game";
 const socket = io("http://localhost:3010");
 
 function App() {
-  const [game, setGame] = useState({ username: "", turn: false, signal: 0 });
+  const [game, setGame] = useState({ username: "", turn: false, signal: 0, winners: [""] });
   const { username, turn, signal } = game;
 
   const [server, setServer] = useState({ room: "", key: "", status: "" });
@@ -104,8 +104,15 @@ function App() {
     });
 
     socket.on("win", (data) => {
-      console.log(data)
+      let winners = game.winners
+      winners.push(data.winner)
+      
+      setGame((state) => {return { ...state, winners: winners }})
     })
+
+    return () => {
+      socket.off("win");
+    };
   }, [socket]);
 
   return (
@@ -139,6 +146,13 @@ function App() {
       </Menu>
 
       {signal}
+
+      {/* placeholder */}
+      <>
+        {game.winners.map(item => (
+          <p>{item}</p>
+        ))}
+      </>
 
       <Grid
       disabled = {turn ? false : true}
