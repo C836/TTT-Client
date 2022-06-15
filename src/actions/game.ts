@@ -1,10 +1,12 @@
+import { ThemeConsumer } from "styled-components";
+
 interface Data {
   socket: any;
   username: string;
   room: string;
   turn?: boolean | undefined;
   position?: number | undefined;
-  signal?: number | undefined
+  signal?: number | undefined;
 }
 
 export class Games implements Data {
@@ -13,7 +15,7 @@ export class Games implements Data {
   room: string;
   turn: boolean | undefined;
   position: number | undefined;
-  signal: number | undefined
+  signal: number | undefined;
 
   constructor(data: Data) {
     this.socket = data.socket,
@@ -30,12 +32,22 @@ export class Games implements Data {
     })
   }
 
-  new_move() {
+  new_move(board: string[]) {
     this.socket.emit("send_position", {
       room: this.room,
-      user: this.username,
+      username: this.username,
       position: this.position,
-      signal: this.signal
+      signal: this.signal,
+
+      board: board
     });
+  }
+
+  reset(winners: string[]) {
+    this.socket.emit("reset", {
+      room: this.room,
+      username: this.username,
+      winners: winners
+    })
   }
 }

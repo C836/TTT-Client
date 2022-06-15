@@ -19,21 +19,18 @@ function App() {
   const [server, setServer] = useState({ room: "", key: "", status: "" });
   const { room, key, status } = server;
 
-  const [board, setBoard] = useState(Array(9).fill(""))
+  const [board, setBoard] = useState([""])
 
   const Room = new Rooms({ socket, username, room });
 
   function sendPosition(position: number) {
-    if(turn === true){
-      new Games({ socket, username, room, turn, position, signal }).new_move();
-    }
-  }
-
-  function updateBoard(data:any){
-    let state = board;
-    state[data.position] = data.signal === 0 ? "O" : "X"
-
-    setBoard(state)
+    setGame((state) => {
+      return {
+        ...state,
+        turn: false
+      }
+    })
+    new Games({ socket, username, room, turn, position, signal }).new_move(board);
   }
 
   useEffect(() => {
@@ -86,28 +83,36 @@ function App() {
     });
 
     socket.on("start_player", (data) => {
+      setBoard(data.board)
+
       if(data.selected === socket.id){
         setGame((state) => {return{...state, turn: true }})
       }
     })
 
-    socket.on("register_position", (data) => {
-      setGame((state) => {return { ...state, turn: false }})
+    socket.on("receive_position", (id, board) => {
+      console.log(id, socket)
 
-      updateBoard(data)
-    })
+      if(id !== socket.id){
+        setGame((state) => {return { ...state, turn: true }})
+      }
 
-    socket.on("receive_position", (data) => {
-      setGame((state) => {return { ...state, turn: true }})
+      setBoard(board)
+    });
 
-      updateBoard(data)
+    socket.on("reset", (winners, board) => {
+      if(winners[winners.length - 1] === socket.id){
+        setGame((state) => {return { ...state, turn: true }})
+      }
+
+      setBoard(board)
     });
 
     socket.on("win", (data) => {
       let winners = game.winners
       winners.push(data.winner)
       
-      setGame((state) => {return { ...state, winners: winners }})
+      setGame((state) => {return { ...state, turn: false, winners: winners }})
     })
 
     return () => {
@@ -153,6 +158,8 @@ function App() {
           <p>{item}</p>
         ))}
       </>
+
+      <button onClick={() => new Games({ socket, username, room }).reset(game.winners)}>reset</button>
 
       <Grid
       disabled = {turn ? false : true}
