@@ -4,7 +4,7 @@ interface Props {
     disabled: boolean
 }
 
-export const Grid = styled.section<Props>`
+export const Grid_Styled = styled.section<Props>`
 width: 100%;
 max-width: 300px;
 background-color: white;

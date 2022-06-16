@@ -3,8 +3,7 @@ import io from "socket.io-client";
 
 import { Global } from "./global";
 
-import { Grid } from "./components/Grid/Grid";
-import { Position } from "./components/Grid/Position";
+import Grid from "./components/Grid/Grid";
 import Menu from "./components/Join_Menu/Menu";
 
 import { Room_Socket } from "./services/actions/rooms";
@@ -51,16 +50,6 @@ function App() {
 
   const Room = new Room_Socket({ socket, username, room });
   const Game = new Game_Socket({ socket, username, room });
-
-  function sendPosition(position: number) {
-    setGame((state) => {
-      return {
-        ...state,
-        turn: false,
-      };
-    });
-    new Game_Socket({ socket, username, room}).new_move(position, signal, board);
-  }
 
   useEffect(() => {
     socket.on("room_status", (response) => {
@@ -165,24 +154,13 @@ function App() {
       Game={{ game, setGame }} 
       Server={{ server, setServer }} />
 
-      {signal}
+      <Grid
+      Game={{ game, setGame }} 
+      Server={{ server, setServer }} 
+      board={ board }
+      />
 
-      {/* placeholder */}
-      <>
-        {game.winners.map((item) => (
-          <p>{item}</p>
-        ))}
-      </>
-
-      <button
-        onClick={() =>
-          new Game_Socket({ socket, username, room }).reset(game.winners)
-        }
-      >
-        reset
-      </button>
-
-      <Grid disabled={turn ? false : true}>
+      {/* <Grid disabled={turn ? false : true}>
         {board.map((item, index) => (
           <Position
             key={index}
@@ -194,7 +172,15 @@ function App() {
             {item}
           </Position>
         ))}
-      </Grid>
+      </Grid> */}
+
+      <button
+        onClick={() =>
+          new Game_Socket({ socket, username, room }).reset(game.winners)
+        }
+      >
+        Novo jogo
+      </button>
     </div>
   );
 }
