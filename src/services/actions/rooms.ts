@@ -1,21 +1,17 @@
-interface Data {
-  socket: any,
-  username: string,
-  room: string
-}
+import { Socket_Config } from "../../App";
 
-export class Rooms implements Data{
-  socket: any
-  username: string
-  room: string
+export class Room_Socket implements Socket_Config {
+  socket: any;
+  username: string;
+  room: string;
 
-  constructor(data:Data){
+  constructor(data: Socket_Config) {
     this.socket = data.socket,
     this.username = data.username,
-    this.room = data.room    
+    this.room = data.room;
   }
 
-  join_room(){
+  join_room() {
     if (this.username && this.room) {
       this.socket.emit("join_room", this.room);
     }

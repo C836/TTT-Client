@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const Menu = styled.section`
+export const Styled_Menu = styled.section`
     width: 300px;
     
     display: flex;

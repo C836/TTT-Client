@@ -5,32 +5,61 @@ import { Global } from "./global";
 
 import { Grid } from "./components/Grid/Grid";
 import { Position } from "./components/Grid/Position";
-import { Menu } from "./components/Join_Menu/Menu";
+import Menu from "./components/Join_Menu/Menu";
 
-import { Rooms } from "./actions/rooms";
-import { Games } from "./actions/game";
+import { Room_Socket } from "./services/actions/rooms";
+import { Game_Socket } from "./services/actions/game";
 
-const socket = io("http://localhost:3010");
+export const socket = io("http://localhost:3010");
+
+export interface Game_Config {
+  username: string;
+  turn: boolean;
+  signal: number;
+  winners: string[];
+}
+
+export interface Server_Config {
+  room: string
+  key: string
+  status: string
+}
+
+export interface Socket_Config {
+  socket: any;
+  username: string;
+  room: string;
+}
 
 function App() {
-  const [game, setGame] = useState({ username: "", turn: false, signal: 0, winners: [""] });
+  const [game, setGame] = useState<Game_Config>({
+    username: "",
+    turn: false,
+    signal: 0,
+    winners: [""],
+  });
   const { username, turn, signal } = game;
 
-  const [server, setServer] = useState({ room: "", key: "", status: "" });
+  const [server, setServer] = useState<Server_Config>({
+    room: "",
+    key: "",
+    status: "",
+  });
   const { room, key, status } = server;
 
-  const [board, setBoard] = useState([""])
+  const [board, setBoard] = useState([""]);
 
-  const Room = new Rooms({ socket, username, room });
+  const Room = new Room_Socket({ socket, username, room });
+  const Game = new Game_Socket({ socket, username, room });
 
   function sendPosition(position: number) {
     setGame((state) => {
       return {
         ...state,
-        turn: false
-      }
-    })
-    new Games({ socket, username, room, turn, position, signal }).new_move(board);
+        turn: false,
+      };
+    });
+    new Game_Socket({ socket, username, room}).new_move(position, signal, board);
   }
 
   useEffect(() => {
@@ -50,9 +79,9 @@ function App() {
         setGame((state) => {
           return {
             ...state,
-            signal: 1
-          }
-        })
+            signal: 1,
+          };
+        });
 
         setServer((state) => {
           return {
@@ -83,37 +112,45 @@ function App() {
     });
 
     socket.on("start_player", (data) => {
-      setBoard(data.board)
+      setBoard(data.board);
 
-      if(data.selected === socket.id){
-        setGame((state) => {return{...state, turn: true }})
+      if (data.selected === socket.id) {
+        setGame((state) => {
+          return { ...state, turn: true };
+        });
       }
-    })
+    });
 
     socket.on("receive_position", (id, board) => {
-      console.log(id, socket)
+      console.log(id, socket);
 
-      if(id !== socket.id){
-        setGame((state) => {return { ...state, turn: true }})
+      if (id !== socket.id) {
+        setGame((state) => {
+          return { ...state, turn: true };
+        });
       }
 
-      setBoard(board)
+      setBoard(board);
     });
 
     socket.on("reset", (winners, board) => {
-      if(winners[winners.length - 1] === socket.id){
-        setGame((state) => {return { ...state, turn: true }})
+      if (winners[winners.length - 1] === socket.id) {
+        setGame((state) => {
+          return { ...state, turn: true };
+        });
       }
 
-      setBoard(board)
+      setBoard(board);
     });
 
     socket.on("win", (data) => {
-      let winners = game.winners
-      winners.push(data.winner)
-      
-      setGame((state) => {return { ...state, turn: false, winners: winners }})
-    })
+      let winners = game.winners;
+      winners.push(data.winner);
+
+      setGame((state) => {
+        return { ...state, turn: false, winners: winners };
+      });
+    });
 
     return () => {
       socket.off("win");
@@ -124,46 +161,28 @@ function App() {
     <div className="App">
       <Global />
 
-      <Menu>
-        <input
-          type={"text"}
-          placeholder={"Apelido"}
-          onChange={(event) =>
-            setGame({ ...game, username: event.target.value })
-          }
-        />
-
-        <input
-          type={"text"}
-          placeholder={"Sala"}
-          onChange={(event) =>
-            setServer({ ...server, room: event.target.value })
-          }
-        />
-
-        <button onClick={() => Room.create_room()}>Create</button>
-        <button onClick={() => Room.join_room()}>Join</button>
-
-        <p>{key}</p>
-        {status !== "ready" 
-        ? <p>{status}</p> 
-        : <button onClick={() => new Games({ socket, username, room }).choose_player()}>Start Game</button>}
-      </Menu>
+      <Menu 
+      Game={{ game, setGame }} 
+      Server={{ server, setServer }} />
 
       {signal}
 
       {/* placeholder */}
       <>
-        {game.winners.map(item => (
+        {game.winners.map((item) => (
           <p>{item}</p>
         ))}
       </>
 
-      <button onClick={() => new Games({ socket, username, room }).reset(game.winners)}>reset</button>
-
-      <Grid
-      disabled = {turn ? false : true}
+      <button
+        onClick={() =>
+          new Game_Socket({ socket, username, room }).reset(game.winners)
+        }
       >
+        reset
+      </button>
+
+      <Grid disabled={turn ? false : true}>
         {board.map((item, index) => (
           <Position
             key={index}
@@ -172,7 +191,7 @@ function App() {
               sendPosition(Number((event.target as HTMLButtonElement).value));
             }}
           >
-          {item}
+            {item}
           </Position>
         ))}
       </Grid>
