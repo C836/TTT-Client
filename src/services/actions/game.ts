@@ -12,9 +12,7 @@ export class Game_Socket implements Socket_Config {
   }
 
   choose_player() {
-    this.socket.emit("choose_player", {
-      room: this.room,  
-    });
+    this.socket.emit("choose_player", this.room);
   }
 
   new_move(
@@ -33,7 +31,6 @@ export class Game_Socket implements Socket_Config {
   reset(winners: string[]) {
     this.socket.emit("reset", {
       room: this.room,
-      username: this.username,
       winners: winners,
     });
   }

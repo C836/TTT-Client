@@ -149,6 +149,7 @@ export default function socket_handlers(props: Props) {
     socket.on("receive_position", receive_position);
     socket.on("reset", reset);
     socket.on("win", win);
+    socket.on("reset_movements", () => {socket.emit("reset_movements")});
 
     return () => {
       socket.off("room_status", room_status);
