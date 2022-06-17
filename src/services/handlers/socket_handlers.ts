@@ -7,28 +7,52 @@ import { Server_Config } from "../../App";
 interface Props {
   socket: Socket;
   game: Game_Config;
-  setBoard: React.Dispatch<React.SetStateAction<string[]>>
+  setBoard: React.Dispatch<React.SetStateAction<string[]>>;
   setGame: React.Dispatch<React.SetStateAction<Game_Config>>;
   setServer: React.Dispatch<React.SetStateAction<Server_Config>>;
+}
+
+interface Room_Status_Config {
+  key: string;
+  status: string;
+}
+
+interface Start_Player_Config {
+  board: string[];
+  selected: string;
+}
+
+interface Receive_Position_Config {
+  board: string[];
+  id: string;
+}
+
+interface Reset_Config {
+  board: string[];
+  winners: string[];
 }
 
 export default function socket_handlers(props: Props) {
   const { socket, game, setBoard, setGame, setServer } = props;
 
-  useEffect(() => {
-    socket.on("room_status", (response) => {
-      if (response.status === "created") {
+  const room_status = (response: Room_Status_Config) => {
+    const { key, status } = response;
+
+    switch (status) {
+      case "created": {
         setServer((state) => {
           return {
             ...state,
-            room: response.key,
-            key: response.key,
+            room: key,
+            key: key,
             status: "Waiting for player...",
           };
         });
+
+        break;
       }
 
-      if (response.status === "joined") {
+      case "joined": {
         setGame((state) => {
           return {
             ...state,
@@ -39,74 +63,99 @@ export default function socket_handlers(props: Props) {
         setServer((state) => {
           return {
             ...state,
-            room: response.key,
+            room: key,
             status: "Conected",
           };
         });
+
+        break;
       }
 
-      if (response.status === "joined_peer") {
+      case "joined_peer": {
         setServer((state) => {
           return {
             ...state,
             status: "Peer conected",
           };
         });
+
+        break;
       }
 
-      if (response.status === "starting") {
+      case "starting": {
         setServer((state) => {
           return {
             ...state,
             status: "ready",
           };
         });
+
+        break;
       }
-    });
+    }
+  };
 
-    socket.on("start_player", (data) => {
-      setBoard(data.board);
+  const start_player = (response: Start_Player_Config) => {
+    const { board, selected } = response;
 
-      if (data.selected === socket.id) {
-        setGame((state) => {
-          return { ...state, turn: true };
-        });
-      }
-    });
+    setBoard(board);
 
-    socket.on("receive_position", (id, board) => {
-      console.log(id, socket);
-
-      if (id !== socket.id) {
-        setGame((state) => {
-          return { ...state, turn: true };
-        });
-      }
-
-      setBoard(board);
-    });
-
-    socket.on("reset", (winners, board) => {
-      if (winners[winners.length - 1] === socket.id) {
-        setGame((state) => {
-          return { ...state, turn: true };
-        });
-      }
-
-      setBoard(board);
-    });
-
-    socket.on("win", (data) => {
-      let winners = game.winners;
-      winners.push(data.winner);
-
+    if (selected === socket.id) {
       setGame((state) => {
-        return { ...state, turn: false, winners: winners };
+        return { ...state, turn: true };
       });
+    }
+  };
+
+  const receive_position = (response: Receive_Position_Config) => {
+    const { id, board } = response;
+
+    if (id !== socket.id) {
+      setGame((state) => {
+        return { ...state, turn: true };
+      });
+    }
+
+    setBoard(board);
+  };
+
+  const reset = (response: Reset_Config) => {
+    const { winners, board } = response;
+    const LAST_WINNER = winners[winners.length - 1];
+
+    if (LAST_WINNER === socket.id) {
+      setGame((state) => {
+        return { ...state, turn: true };
+      });
+    }
+
+    setBoard(board);
+  };
+
+  const win = (response: { winner: string }) => {
+    const { winner } = response;
+    let winners = game.winners;
+
+    winners.push(winner);
+
+    setGame((state) => {
+      return { ...state, turn: false, winners: winners };
     });
+  };
+
+  useEffect(() => {
+    socket.on("room_status", room_status);
+    socket.on("start_player", start_player);
+    socket.on("receive_position", receive_position);
+    socket.on("reset", reset);
+    socket.on("win", win);
 
     return () => {
-      socket.off("win");
+      socket.off("room_status", room_status);
+      socket.off("start_player", start_player);
+      socket.off("receive_position", receive_position);
+      socket.off("reset", reset);
+      socket.off("win", win);
     };
   }, [socket]);
 }
