@@ -68,14 +68,13 @@ function App() {
       <Grid
         board={board}
         Game={{ game, setGame }}
-        Server={{ server, setServer }}
+        Server={{ server }}
       />
 
       <Extras
         socket={socket}
-        board={board}
         Game={{ game, setGame }}
-        Server={{ server, setServer }}
+        Server={{ server }}
       />
     </div>
   );

@@ -20,7 +20,7 @@ interface Props {
 
 export default function Menu({ Game, Server }: Props) {
   const { game, setGame } = Game;
-  const { username, turn, signal, winners } = game;
+  const { username } = game;
 
   const { server, setServer } = Server;
   const { room, key, status } = server;

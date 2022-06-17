@@ -1,7 +1,8 @@
 import { Socket_Config } from "../../App";
+import { Socket } from "socket.io-client";
 
 export class Room_Socket implements Socket_Config {
-  socket: any;
+  socket: Socket;
   username: string;
   room: string;
 

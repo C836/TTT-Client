@@ -17,16 +17,15 @@ interface Props {
   };
   Server: {
     server: Server_Config;
-    setServer: Function;
   };
 }
 
 export default function Grid({ Game, Server, board }: Props) {
   const { game, setGame } = Game;
-  const { username, turn, signal, winners } = game;
+  const { username, turn, signal } = game;
 
-  const { server, setServer } = Server;
-  const { room, key, status } = server;
+  const { server } = Server;
+  const { room } = server;
 
   const new_Room = new Room_Socket({ socket, username, room });
   const new_Game = new Game_Socket({ socket, username, room });
