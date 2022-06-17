@@ -1,13 +1,12 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import io from "socket.io-client";
 
-import { Global } from "./global";
+import { Global } from "./assets/global";
+import { theme } from "./assets/theme"
 
 import Grid from "./components/Grid/Grid";
 import Menu from "./components/Join_Menu/Menu";
 
-import { Room_Socket } from "./services/actions/rooms";
-import { Game_Socket } from "./services/actions/game";
 import socket_handlers from "./services/handlers/socket_handlers";
 import Extras from "./components/Extras/Extras";
 
