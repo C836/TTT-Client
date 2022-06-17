@@ -1,4 +1,7 @@
 export const theme = {
+  fonts: {
+    main: "'Comfortaa', cursive;"
+  },
   colors: {
     light: {
       main: "#48f096",
