@@ -9,6 +9,7 @@ import Menu from "./components/Join_Menu/Menu";
 import { Room_Socket } from "./services/actions/rooms";
 import { Game_Socket } from "./services/actions/game";
 import socket_handlers from "./services/handlers/socket_handlers";
+import Extras from "./components/Extras/Extras";
 
 export const socket = io("http://localhost:3010");
 
@@ -38,14 +39,12 @@ function App() {
     signal: 0,
     winners: [""],
   });
-  const { username, turn, signal } = game;
 
   const [server, setServer] = useState<Server_Config>({
     room: "",
     key: "",
     status: "",
   });
-  const { room, key, status } = server;
 
   const [board, setBoard] = useState([""]);
 
@@ -62,22 +61,22 @@ function App() {
       <Global />
 
       <Menu 
-        Game={{ game, setGame }} 
-        Server={{ server, setServer }} />
-
-      <Grid
         Game={{ game, setGame }}
-        Server={{ server, setServer }}
-        board={board}
+        Server={{ server, setServer }} 
       />
 
-      <button
-        onClick={() =>
-          new Game_Socket({ socket, username, room }).reset(game.winners)
-        }
-      >
-        Novo jogo
-      </button>
+      <Grid
+        board={board}
+        Game={{ game, setGame }}
+        Server={{ server, setServer }}
+      />
+
+      <Extras
+        socket={socket}
+        board={board}
+        Game={{ game, setGame }}
+        Server={{ server, setServer }}
+      />
     </div>
   );
 }
