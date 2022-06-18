@@ -5,12 +5,15 @@ export const theme = {
   colors: {
     light: {
       main: "#48f096",
-      dark: "#0c7c59",
-      alt: "#8DE4FF",
-      alt_dark: "#376996",
-      darker: "#3a3335",
+      dark: "#109473",
+      darker: "#074234",
+      alt: "#4595de",
       black: "#101010",
       white: "#fff",
     },
+    hover: {
+      main: "#0c765c",
+      alt: "#2378c5"
+    }
   },
 };

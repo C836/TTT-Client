@@ -16,6 +16,7 @@ export const Styled_Menu = styled.section`
 
   background-color: white;
   border-radius: 0.5em;
+  box-shadow: 0 0 40px #11111170;
 
   display: flex;
   flex-direction: column;

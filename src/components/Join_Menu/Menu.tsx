@@ -77,7 +77,7 @@ export default function Menu({ Game, Server }: Props) {
       </Button>
       <Button 
         onClick={join_room}
-        alt>
+        alt={"true"}>
         Join <TbDoorEnter />
       </Button>
 

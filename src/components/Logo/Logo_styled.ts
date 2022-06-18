@@ -3,16 +3,23 @@ import styled from "styled-components";
 import { theme } from "../../assets/theme";
 
 const font = theme.fonts;
+const color = theme.colors.light;
 
 export const Styled_Logo = styled.figure`
   display: flex;
   align-items: center;
   justify-content: center;
+  color: ${color.darker};
 
-  margin-bottom: .5em;
+  margin-bottom: 0.5em;
   font: 800 2.3rem ${font.main};
 
-  & p{
+  & p {
     font-size: 2.7rem;
+  }
+
+  & i {
+    font-style: normal;
+    color: ${color.dark};
   }
 `;

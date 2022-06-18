@@ -1,5 +1,10 @@
 import { createGlobalStyle } from "styled-components";
 
+import background from "./images/background.png"
+import { theme } from "./theme";
+
+const color = theme.colors.light;
+
 export const Global = createGlobalStyle`
     *{
         margin: 0;
@@ -9,6 +14,7 @@ export const Global = createGlobalStyle`
     }
 
     body{
-        background-color: grey;
+        background: url(${background}) center repeat, ${color.main};
+        background-size: 150px;
     }
 `;

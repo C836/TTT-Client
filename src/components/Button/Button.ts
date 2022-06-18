@@ -2,10 +2,11 @@ import styled from "styled-components";
 import { theme } from "../../assets/theme";
 
 const color = theme.colors.light;
+const hover = theme.colors.hover;
 const font = theme.fonts;
 
 interface Props {
-  alt?: boolean;
+  alt?: string | undefined;
 }
 
 export const Button = styled.button<Props>`
@@ -16,11 +17,17 @@ export const Button = styled.button<Props>`
 
   border: none;
   border-radius: 0.3em;
-  background: ${(props) => (props.alt ? color.alt_dark : color.dark)};
+  background: ${(props) => (props.alt ? color.alt : color.dark)};
+  transition: .2s;
   color: white;
   font: 600 1.2rem ${font.main};
+  cursor: pointer;
 
   display: flex;
   align-items: center;
   justify-content: center;
+
+  &:hover{
+    background: ${(props) => (props.alt ? hover.alt : hover.main)};
+  }
 `;
