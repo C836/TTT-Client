@@ -1,11 +1,17 @@
 import { Styled_Menu } from "./Menu_styled";
 import { socket } from "../../App";
 
+import { HiPlus } from "react-icons/hi"
+import { TbDoorEnter } from "react-icons/tb"
+
 import { Room_Socket } from "../../services/actions/rooms";
 import { Game_Socket } from "../../services/actions/game";
 
 import { Game_Config } from "../../App";
 import { Server_Config } from "../../App";
+import { Button } from "../Button/Button";
+import { Input } from "../Input/Input";
+import Logo from "../Logo/Logo";
 
 interface Props {
   Game: {
@@ -52,26 +58,28 @@ export default function Menu({ Game, Server }: Props) {
 
   return (
     <Styled_Menu>
-      <input
+      <Logo />
+      <Input
         type={"text"}
-        placeholder={"Apelido"}
+        placeholder={"Nickname"}
         onChange={change_username}
       />
 
-      <input
+      {/* <Input
         type={"text"}
         placeholder={"Sala"}
         onChange={change_room}
-      />
+      /> */}
 
-      <button 
+      <Button
         onClick={create_room}>
-        Create
-      </button>
-      <button 
-        onClick={join_room}>
-        Join
-      </button>
+        Create room <HiPlus />
+      </Button>
+      <Button 
+        onClick={join_room}
+        alt>
+        Join <TbDoorEnter />
+      </Button>
 
       <p>{key}</p>
 
