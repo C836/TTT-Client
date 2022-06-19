@@ -43,7 +43,7 @@ export const Styled_Menu = styled.section`
   }
 `;
 
-export const Container_Menu = styled.section<Props>`
+export const Container_Menu = styled.form<Props>`
   display: ${props => props.$disabled ? "none" : "block"};
 
   & .key {

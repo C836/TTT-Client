@@ -8,7 +8,7 @@ export const Input = styled.input`
   height: 100%;
   padding: 0.5em;
 
-  border: 0.1rem solid gray;
+  border: .1em solid gray;
   border-radius: 0.3em;
   margin-bottom: 0.3em;
   font: 600 1.1rem ${font.main};
@@ -16,4 +16,9 @@ export const Input = styled.input`
   display: flex;
   align-items: center;
   justify-content: center;
+
+  &:invalid:focus {
+    border: .1em solid transparent;
+    outline: .1em solid red;
+  }
 `;

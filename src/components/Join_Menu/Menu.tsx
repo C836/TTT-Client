@@ -51,12 +51,18 @@ export default function Menu({ Game, Server }: Props) {
     setServer({ ...server, room: new_room });
   };
 
-  const create_room = () => {
+  const create_room = (event: any) => {
+    if (!username) return;
+
+    event.preventDefault();
     setUi("create");
     new_Room.create_room();
   };
 
-  const join_menu = () => {
+  const join_menu = (event: any) => {
+    if (!username) return;
+
+    event.preventDefault();
     setUi("join");
   };
 
@@ -69,7 +75,9 @@ export default function Menu({ Game, Server }: Props) {
     new_Game.choose_player();
   };
 
-  const back = () => {
+  const back = (event: any) => {
+    event.preventDefault()
+    
     setUi(null);
   };
 
@@ -86,9 +94,10 @@ export default function Menu({ Game, Server }: Props) {
             type={"text"}
             placeholder={"Apelido"}
             onChange={change_username}
+            required
           />
 
-          <Button onClick={create_room}>
+          <Button type="submit" onClick={create_room}>
             Create room 
             <HiPlus />
           </Button>
@@ -109,8 +118,7 @@ export default function Menu({ Game, Server }: Props) {
 
           <p className="status">{status}</p>
 
-          <Button
-          onClick={choose_player}>
+          <Button onClick={choose_player}>
             Iniciar jogo 
             <IoMdCheckmark />
           </Button>
@@ -140,8 +148,7 @@ export default function Menu({ Game, Server }: Props) {
 
           <p className="status">{status}</p>
 
-          <Button
-          onClick={choose_player}>
+          <Button onClick={choose_player}>
             Pronto 
             <IoMdCheckmark />
           </Button>
