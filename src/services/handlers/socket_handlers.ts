@@ -45,7 +45,7 @@ export default function socket_handlers(props: Props) {
             ...state,
             room: key,
             key: key,
-            status: "Waiting for player...",
+            status: "Aguardando jogador...",
           };
         });
 
@@ -64,7 +64,7 @@ export default function socket_handlers(props: Props) {
           return {
             ...state,
             room: key,
-            status: "Conected",
+            status: "Conectado",
           };
         });
 
@@ -75,7 +75,7 @@ export default function socket_handlers(props: Props) {
         setServer((state) => {
           return {
             ...state,
-            status: "Peer conected",
+            status: "Par conectado",
           };
         });
 
@@ -86,7 +86,7 @@ export default function socket_handlers(props: Props) {
         setServer((state) => {
           return {
             ...state,
-            status: "ready",
+            status: "Conexão estabelecida",
           };
         });
 
