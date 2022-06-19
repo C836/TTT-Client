@@ -1,8 +1,14 @@
+import { Container } from "react-dom";
 import styled from "styled-components";
 
 import { theme } from "../../assets/theme";
 
-const color = theme.colors.light
+const color = theme.colors.light;
+const font = theme.fonts;
+
+interface Props {
+  $disabled?: any;
+}
 
 export const Styled_Menu = styled.section`
   width: 300px;
@@ -21,4 +27,31 @@ export const Styled_Menu = styled.section`
   display: flex;
   flex-direction: column;
   align-items: stretch;
+
+  & .status {
+    margin: 0.5em;
+    text-align: center;
+
+    color: ${color.black};
+    font: 700 1rem ${font.main};
+  }
+
+  & .room {
+    margin: 0.7em;
+    text-align: center;
+    font: 600 1rem ${font.main};
+  }
 `;
+
+export const Container_Menu = styled.section<Props>`
+  display: ${props => props.$disabled ? "none" : "block"};
+
+  & .key {
+    display: block;
+    text-align: center;
+    padding-top: .4em;
+
+    color: ${color.black};
+    font: 700 1.7rem ${font.main};
+  }
+`

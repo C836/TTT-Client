@@ -7,7 +7,6 @@ const font = theme.fonts;
 
 interface Props {
   $alt?: boolean;
-  $disabled?: boolean;
 }
 
 export const Button = styled.button<Props>`
@@ -15,12 +14,6 @@ export const Button = styled.button<Props>`
   height: 100%;
   padding: 0.5em;
   margin-top: 0.5em;
-
-  opacity: ${(props) => (props.$disabled ? "0" : "1")};
-  pointer-events: ${(props) => (props.$disabled ? "none" : "all")};
-  animation: ${(props) => (props.$disabled ? "disable 0s" : "")};
-  animation-delay: 0.2s;
-  animation-fill-mode: forwards;
 
   border: none;
   border-radius: 0.3em;

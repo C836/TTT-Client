@@ -22,7 +22,7 @@ export const Global = createGlobalStyle`
         from {
             position: static;
         } to {
-            position: absolute;
+            position: fixed;
         }
     }
 `;
