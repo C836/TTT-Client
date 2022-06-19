@@ -37,9 +37,9 @@ export const Styled_Menu = styled.section`
   }
 
   & .room {
-    margin: 0.7em;
+    margin: 0.79em;
     text-align: center;
-    font: 600 1rem ${font.main};
+    font: 600 1.2rem ${font.main};
   }
 `;
 

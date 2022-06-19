@@ -56,8 +56,12 @@ export default function Menu({ Game, Server }: Props) {
     new_Room.create_room();
   };
 
-  const join_room = () => {
+  const join_menu = () => {
     setUi("join");
+  };
+
+  const join_room = () => {
+    setUi("ready");
     new_Room.join_room();
   };
 
@@ -74,11 +78,13 @@ export default function Menu({ Game, Server }: Props) {
   return (
     <div style={{ display: "flex", alignItems: "center" }}>
       <Styled_Menu>
-        <Logo $alt={uiState === "create" ? false : true} />
+        <Logo
+          $alt={uiState === "create" || uiState === "ready" ? false : true}
+        />
         <Container_Menu $disabled={uiState !== null ? true : false}>
           <Input
             type={"text"}
-            placeholder={"Nickname"}
+            placeholder={"Apelido"}
             onChange={change_username}
           />
 
@@ -87,7 +93,7 @@ export default function Menu({ Game, Server }: Props) {
             <HiPlus />
           </Button>
 
-          <Button onClick={join_room} $alt={true}>
+          <Button $alt={true} onClick={join_menu}>
             Join 
             <TbDoorEnter />
           </Button>
@@ -103,7 +109,8 @@ export default function Menu({ Game, Server }: Props) {
 
           <p className="status">{status}</p>
 
-          <Button>
+          <Button
+          onClick={choose_player}>
             Iniciar jogo 
             <IoMdCheckmark />
           </Button>
@@ -115,17 +122,28 @@ export default function Menu({ Game, Server }: Props) {
         </Container_Menu>
 
         <Container_Menu $disabled={uiState !== "join" ? true : false}>
-          <Input
-            type={"text"}
-            placeholder={"Sala"}
-            onChange={change_room}
-          />
+          <Input type={"text"} placeholder={"Sala"} onChange={change_room} />
+
+          <Button onClick={join_room}>
+            Entrar 
+            <TbDoorEnter />
+          </Button>
+
+          <Button $alt={true} onClick={back}>
+            Voltar 
+            <IoArrowBack />
+          </Button>
+        </Container_Menu>
+
+        <Container_Menu $disabled={uiState !== "ready" ? true : false}>
+          <p className="room">Sala: {key || "a4w8aw1"}</p>
 
           <p className="status">{status}</p>
 
-          <Button>
-            Entrar 
-            <TbDoorEnter />
+          <Button
+          onClick={choose_player}>
+            Pronto 
+            <IoMdCheckmark />
           </Button>
 
           <Button $alt={true} onClick={back}>
