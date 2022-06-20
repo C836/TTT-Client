@@ -45,8 +45,7 @@ export default function Grid({ Game, Server, board }: Props) {
   };
 
   return (
-    <Grid_Styled 
-    disabled={turn ? false : true}>
+    <Grid_Styled disabled={turn ? false : true}>
       {board.map((item, index) => (
         <Position
           key={index}
@@ -55,7 +54,8 @@ export default function Grid({ Game, Server, board }: Props) {
             send_position(Number((event.target as HTMLButtonElement).value));
           }}
         >
-          {item === "1" ? "x" : item === "0" && "o"}
+          {String(item) === "1" ? "x" : 
+           String(item) === "0" && "o"}
         </Position>
       ))}
     </Grid_Styled>
