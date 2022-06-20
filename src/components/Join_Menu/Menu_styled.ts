@@ -10,7 +10,11 @@ interface Props {
   $disabled?: any;
 }
 
-export const Styled_Menu = styled.section`
+interface Menu_Config {
+  ingame: boolean
+}
+
+export const Styled_Menu = styled.section<Menu_Config>`
   width: 300px;
   padding: 1em;
 
@@ -27,6 +31,9 @@ export const Styled_Menu = styled.section`
   display: flex;
   flex-direction: column;
   align-items: stretch;
+
+  opacity: ${({ingame}) => ingame ? "0" : "1"};
+  pointer-events: ${({ingame}) => ingame ? "none" : "all"};
 
   & .status {
     margin: 0.5em;

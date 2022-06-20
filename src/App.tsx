@@ -20,6 +20,7 @@ export interface Game_Config {
 }
 
 export interface Server_Config {
+  ingame: boolean,
   room: string;
   key: string;
   status: string;
@@ -34,18 +35,19 @@ export interface Socket_Config {
 function App() {
   const [game, setGame] = useState<Game_Config>({
     username: "",
-    turn: false,
+    turn: true,
     signal: 0,
     winners: [""],
   });
 
   const [server, setServer] = useState<Server_Config>({
+    ingame: false,
     room: "",
     key: "",
     status: "",
   });
 
-  const [board, setBoard] = useState([""]);
+  const [board, setBoard] = useState<string[]>([]);
 
   socket_handlers({
     socket,

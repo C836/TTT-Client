@@ -100,6 +100,13 @@ export default function socket_handlers(props: Props) {
 
     setBoard(board);
 
+    setServer((state) => {
+      return {
+        ...state,
+        ingame: true,
+      };
+    });
+
     if (selected === socket.id) {
       setGame((state) => {
         return { ...state, turn: true };

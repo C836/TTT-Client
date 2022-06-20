@@ -23,11 +23,11 @@ import useTransition from "react-transition-state";
 interface Props {
   Game: {
     game: Game_Config;
-    setGame: Function;
+    setGame: React.Dispatch<React.SetStateAction<Game_Config>>;
   };
   Server: {
     server: Server_Config;
-    setServer: Function;
+    setServer: React.Dispatch<React.SetStateAction<Server_Config>>;
   };
 }
 
@@ -36,7 +36,7 @@ export default function Menu({ Game, Server }: Props) {
   const { username } = game;
 
   const { server, setServer } = Server;
-  const { room, key, status } = server;
+  const { ingame, room, key, status } = server;
 
   const new_Room = new Room_Socket({ socket, username, room });
   const new_Game = new Game_Socket({ socket, username, room });
@@ -66,99 +66,100 @@ export default function Menu({ Game, Server }: Props) {
     setUi("join");
   };
 
-  const join_room = () => {
+  const join_room = (event: any) => {
+    event.preventDefault();
+
     setUi("ready");
     new_Room.join_room();
   };
 
-  const choose_player = () => {
+  const choose_player = (event: any) => {
+    event.preventDefault();
+    
     new_Game.choose_player();
   };
 
   const back = (event: any) => {
-    event.preventDefault()
-    
+    event.preventDefault();
+
     setUi(null);
   };
 
   const [uiState, setUi] = useState<string | null>(null);
 
   return (
-    <div style={{ display: "flex", alignItems: "center" }}>
-      <Styled_Menu>
-        <Logo
-          $alt={uiState === "create" || uiState === "ready" ? false : true}
+    <Styled_Menu
+    ingame={ingame}>
+      <Logo $alt={uiState === "create" || uiState === "ready" ? false : true} />
+      <Container_Menu $disabled={uiState !== null ? true : false}>
+        <Input
+          type={"text"}
+          placeholder={"Apelido"}
+          onChange={change_username}
+          required
         />
-        <Container_Menu $disabled={uiState !== null ? true : false}>
-          <Input
-            type={"text"}
-            placeholder={"Apelido"}
-            onChange={change_username}
-            required
-          />
 
-          <Button type="submit" onClick={create_room}>
-            Create room 
-            <HiPlus />
-          </Button>
+        <Button type="submit" onClick={create_room}>
+          Create room 
+          <HiPlus />
+        </Button>
 
-          <Button $alt={true} onClick={join_menu}>
-            Join 
-            <TbDoorEnter />
-          </Button>
-        </Container_Menu>
+        <Button $alt={true} onClick={join_menu}>
+          Join 
+          <TbDoorEnter />
+        </Button>
+      </Container_Menu>
 
-        <Container_Menu $disabled={uiState !== "create" ? true : false}>
-          <span className="key">
-            {key || "a4w8aw1"} 
-            <IconContext.Provider value={{ size: "20px" }}>
-              <MdContentCopy />
-            </IconContext.Provider>
-          </span>
+      <Container_Menu $disabled={uiState !== "create" ? true : false}>
+        <span className="key">
+          {key || "a4w8aw1"} 
+          <IconContext.Provider value={{ size: "20px" }}>
+            <MdContentCopy />
+          </IconContext.Provider>
+        </span>
 
-          <p className="status">{status}</p>
+        <p className="status">{status}</p>
 
-          <Button onClick={choose_player}>
-            Iniciar jogo 
-            <IoMdCheckmark />
-          </Button>
+        <Button onClick={choose_player}>
+          Iniciar jogo 
+          <IoMdCheckmark />
+        </Button>
 
-          <Button $alt={true} onClick={back}>
-            Voltar 
-            <IoArrowBack />
-          </Button>
-        </Container_Menu>
+        <Button $alt={true} onClick={back}>
+          Voltar 
+          <IoArrowBack />
+        </Button>
+      </Container_Menu>
 
-        <Container_Menu $disabled={uiState !== "join" ? true : false}>
-          <Input type={"text"} placeholder={"Sala"} onChange={change_room} />
+      <Container_Menu $disabled={uiState !== "join" ? true : false}>
+        <Input type={"text"} placeholder={"Sala"} onChange={change_room} />
 
-          <Button onClick={join_room}>
-            Entrar 
-            <TbDoorEnter />
-          </Button>
+        <Button onClick={join_room}>
+          Entrar 
+          <TbDoorEnter />
+        </Button>
 
-          <Button $alt={true} onClick={back}>
-            Voltar 
-            <IoArrowBack />
-          </Button>
-        </Container_Menu>
+        <Button $alt={true} onClick={back}>
+          Voltar 
+          <IoArrowBack />
+        </Button>
+      </Container_Menu>
 
-        <Container_Menu $disabled={uiState !== "ready" ? true : false}>
-          <p className="room">Sala: {key || "a4w8aw1"}</p>
+      <Container_Menu $disabled={uiState !== "ready" ? true : false}>
+        <p className="room">Sala: {key || "a4w8aw1"}</p>
 
-          <p className="status">{status}</p>
+        <p className="status">{status}</p>
 
-          <Button onClick={choose_player}>
-            Pronto 
-            <IoMdCheckmark />
-          </Button>
+        <Button onClick={choose_player}>
+          Pronto 
+          <IoMdCheckmark />
+        </Button>
 
-          <Button $alt={true} onClick={back}>
-            Voltar 
-            <IoArrowBack />
-          </Button>
-        </Container_Menu>
-      </Styled_Menu>
-    </div>
+        <Button $alt={true} onClick={back}>
+          Voltar 
+          <IoArrowBack />
+        </Button>
+      </Container_Menu>
+    </Styled_Menu>
   );
 }
