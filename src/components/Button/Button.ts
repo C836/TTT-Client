@@ -7,6 +7,7 @@ const font = theme.fonts;
 
 interface Props {
   $alt?: boolean;
+  disabled? : boolean;
 }
 
 export const Button = styled.button<Props>`
@@ -18,6 +19,8 @@ export const Button = styled.button<Props>`
   border: none;
   border-radius: 0.3em;
   background: ${(props) => (props.$alt ? color.alt : color.dark)};
+  opacity: ${(props) => (props.disabled ? 0.7 : 1)};
+  pointer-events: ${(props) => (props.disabled ? "none" : "all")};
   transition: 0.2s;
   color: white;
   font: 600 1.2rem ${font.main};
