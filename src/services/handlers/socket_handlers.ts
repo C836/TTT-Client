@@ -95,6 +95,15 @@ export default function socket_handlers(props: Props) {
     }
   };
 
+  const ready_to_start = () => {
+    setGame((state) => {
+      return {
+        ...state,
+        ready_to_start: true,
+      };
+    });
+  }
+
   const start_player = (response: Start_Player_Config) => {
     const { board, selected } = response;
 
@@ -152,6 +161,7 @@ export default function socket_handlers(props: Props) {
 
   useEffect(() => {
     socket.on("room_status", room_status);
+    socket.on("ready_to_start", ready_to_start)
     socket.on("start_player", start_player);
     socket.on("receive_position", receive_position);
     socket.on("reset", reset);

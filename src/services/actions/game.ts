@@ -11,6 +11,10 @@ export class Game_Socket implements Socket_Config {
     this.room = data.room;
   }
 
+  player_ready() {
+    this.socket.emit("player_ready", this.room)
+  }
+
   choose_player() {
     this.socket.emit("choose_player", this.room);
   }

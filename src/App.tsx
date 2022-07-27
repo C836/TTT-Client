@@ -13,6 +13,7 @@ import Extras from "./components/Extras/Extras";
 export const socket = io("http://localhost:3010");
 
 export interface Game_Config {
+  ready_to_start: boolean;
   username: string;
   turn: boolean;
   signal: number;
@@ -34,6 +35,7 @@ export interface Socket_Config {
 
 function App() {
   const [game, setGame] = useState<Game_Config>({
+    ready_to_start: false,
     username: "",
     turn: true,
     signal: 0,

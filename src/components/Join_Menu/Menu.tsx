@@ -73,6 +73,12 @@ export default function Menu({ Game, Server }: Props) {
     new_Room.join_room();
   };
 
+  const player_ready = (event:any) => {
+    event.preventDefault();
+
+    new_Game.player_ready()
+  }
+
   const choose_player = (event: any) => {
     event.preventDefault();
     
@@ -120,8 +126,8 @@ export default function Menu({ Game, Server }: Props) {
 
         <p className="status">{status}</p>
 
-        <Button onClick={choose_player}>
-          Iniciar jogo 
+        <Button disabled = {game.ready_to_start ? false : true} onClick={choose_player}>
+          {game.ready_to_start ? "Iniciar jogo " : "Aguardando jogador"}
           <IoMdCheckmark />
         </Button>
 
@@ -150,7 +156,7 @@ export default function Menu({ Game, Server }: Props) {
 
         <p className="status">{status}</p>
 
-        <Button onClick={choose_player}>
+        <Button onClick={player_ready}>
           Pronto 
           <IoMdCheckmark />
         </Button>
