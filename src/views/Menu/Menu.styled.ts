@@ -1,4 +1,3 @@
-import { Container } from "react-dom";
 import styled from "styled-components";
 
 import { theme } from "../../assets/theme";
@@ -6,15 +5,7 @@ import { theme } from "../../assets/theme";
 const color = theme.colors.light;
 const font = theme.fonts;
 
-interface Props {
-  $disabled?: any;
-}
-
-interface Menu_Config {
-  ingame: boolean
-}
-
-export const Styled_Menu = styled.section<Menu_Config>`
+export const Menu = styled.section<{ disabled?: boolean }>`
   width: 300px;
   padding: 1em;
 
@@ -32,10 +23,12 @@ export const Styled_Menu = styled.section<Menu_Config>`
   flex-direction: column;
   align-items: stretch;
 
-  opacity: ${({ingame}) => ingame ? "0" : "1"};
-  pointer-events: ${({ingame}) => ingame ? "none" : "all"};
+  transition: opacity 0.2s;
 
-  & .status {
+  opacity: ${({ disabled }) => (disabled ? "0" : "1")};
+  pointer-events: ${({ disabled }) => (disabled ? "none" : "all")};
+
+  .status {
     margin: 0.5em;
     text-align: center;
 
@@ -43,22 +36,9 @@ export const Styled_Menu = styled.section<Menu_Config>`
     font: 700 1rem ${font.main};
   }
 
-  & .room {
+  .room {
     margin: 0.79em;
     text-align: center;
     font: 600 1.2rem ${font.main};
   }
 `;
-
-export const Container_Menu = styled.form<Props>`
-  display: ${props => props.$disabled ? "none" : "block"};
-
-  & .key {
-    display: block;
-    text-align: center;
-    padding-top: .4em;
-
-    color: ${color.black};
-    font: 700 1.7rem ${font.main};
-  }
-`

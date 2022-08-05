@@ -2,39 +2,18 @@ import { useState } from "react";
 import io from "socket.io-client";
 
 import { Global } from "./assets/global";
-import { theme } from "./assets/theme"
 
 import Grid from "./components/Grid/Grid";
-import Menu from "./components/Join_Menu/Menu";
+import { Menu } from "./views/Menu/Menu"
 
 import socket_handlers from "./services/handlers/socket_handlers";
 import Extras from "./components/Extras/Extras";
+import { GameConfig, ServerConfig } from "./types";
 
 export const socket = io("http://localhost:3010");
 
-export interface Game_Config {
-  ready_to_start: boolean;
-  username: string;
-  turn: boolean;
-  signal: number;
-  winners: string[];
-}
-
-export interface Server_Config {
-  ingame: boolean,
-  room: string;
-  key: string;
-  status: string;
-}
-
-export interface Socket_Config {
-  socket: any;
-  username: string;
-  room: string;
-}
-
 function App() {
-  const [game, setGame] = useState<Game_Config>({
+  const [game, setGame] = useState<GameConfig>({
     ready_to_start: false,
     username: "",
     turn: true,
@@ -42,7 +21,7 @@ function App() {
     winners: [""],
   });
 
-  const [server, setServer] = useState<Server_Config>({
+  const [server, setServer] = useState<ServerConfig>({
     ingame: false,
     room: "",
     key: "",
@@ -63,7 +42,7 @@ function App() {
     <div className="App">
       <Global />
 
-      <Menu 
+      <Menu
         Game={{ game, setGame }}
         Server={{ server, setServer }} 
       />
