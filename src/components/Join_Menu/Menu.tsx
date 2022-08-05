@@ -40,6 +40,8 @@ export default function Menu({ Game, Server }: Props) {
 
   const new_Room = new Room_Socket({ socket, username, room });
   const new_Game = new Game_Socket({ socket, username, room });
+  
+  const [playerReady, setReady] = useState(false)
 
   const change_username = (event: React.ChangeEvent<HTMLInputElement>) => {
     const new_username = event.target.value;
@@ -75,6 +77,7 @@ export default function Menu({ Game, Server }: Props) {
 
   const player_ready = (event:any) => {
     event.preventDefault();
+    setReady(true)
 
     new_Game.player_ready()
   }
@@ -156,7 +159,7 @@ export default function Menu({ Game, Server }: Props) {
 
         <p className="status">{status}</p>
 
-        <Button onClick={player_ready}>
+        <Button disabled={playerReady} onClick={player_ready}>
           Pronto 
           <IoMdCheckmark />
         </Button>
