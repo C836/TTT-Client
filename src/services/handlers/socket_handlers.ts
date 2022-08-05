@@ -102,7 +102,7 @@ export default function socket_handlers(props: Props) {
         ready_to_start: true,
       };
     });
-  }
+  };
 
   const start_player = (response: Start_Player_Config) => {
     const { board, selected } = response;
@@ -119,6 +119,10 @@ export default function socket_handlers(props: Props) {
     if (selected === socket.id) {
       setGame((state) => {
         return { ...state, turn: true };
+      });
+    } else {
+      setGame((state) => {
+        return { ...state, turn: false };
       });
     }
   };
@@ -161,12 +165,14 @@ export default function socket_handlers(props: Props) {
 
   useEffect(() => {
     socket.on("room_status", room_status);
-    socket.on("ready_to_start", ready_to_start)
+    socket.on("ready_to_start", ready_to_start);
     socket.on("start_player", start_player);
     socket.on("receive_position", receive_position);
     socket.on("reset", reset);
     socket.on("win", win);
-    socket.on("reset_movements", () => {socket.emit("reset_movements")});
+    socket.on("reset_movements", () => {
+      socket.emit("reset_movements");
+    });
 
     return () => {
       socket.off("room_status", room_status);
