@@ -8,6 +8,7 @@ import { MdContentCopy } from "react-icons/md";
 import { IoArrowBack } from "react-icons/io5";
 import { RiCheckFill } from "react-icons/ri";
 import { IoMdCheckmark } from "react-icons/io";
+import { FiClock } from "react-icons/fi";
 
 import { Room_Socket } from "../../services/actions/rooms";
 import { Game_Socket } from "../../services/actions/game";
@@ -18,7 +19,6 @@ import { Button } from "../Button/Button";
 import { Input } from "../Input/Input";
 import Logo from "../Logo/Logo";
 import { useState } from "react";
-import useTransition from "react-transition-state";
 
 interface Props {
   Game: {
@@ -127,8 +127,8 @@ export default function Menu({ Game, Server }: Props) {
         <p className="status">{status}</p>
 
         <Button disabled = {game.ready_to_start ? false : true} onClick={choose_player}>
-          {game.ready_to_start ? "Iniciar jogo " : "Aguardando jogador"}
-          <IoMdCheckmark />
+          {game.ready_to_start ? "Iniciar jogo " : "Aguarde... "}
+          {game.ready_to_start && <IoMdCheckmark />}
         </Button>
 
         <Button $alt={true} onClick={back}>
